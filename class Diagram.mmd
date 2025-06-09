@@ -29,10 +29,16 @@ class Review {
     +String cleanliness
     +String communication
     +String check_in
+    +String rating
 }
 class Amenity {
-    +attribute1: Type
-    +method1(): ReturnType
+    +String name
+    +String description
+    +Boolean is_available
+    +Float extra_cost
+
+    +get_details(): String
+    +is_free(): Boolean
 }
 User --|> Place 
 User --> Review  
