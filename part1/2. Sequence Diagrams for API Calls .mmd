@@ -1,39 +1,27 @@
-sequenceDiagram
-    participant User
-    participant API
-    participant PlaceModel
-    participant ReviewModel
-    participant UserModel
-    participant Database
+classDiagram
+    %% Packages
+    class PresentationLayer {
+        <<Package>>
+        +API
+        +Services
+    }
 
-    %% GET /places?city_id=xyz
-    User->>API: GET /places?city_id=xyz
-    API->>PlaceModel: get_places_by_city(city_id)
-    PlaceModel->>Database: SELECT * FROM places WHERE city_id=xyzc
-    Database-->>PlaceModel: return place list
-    PlaceModel-->>API: return place data
-    API-->>User: 200 OK + places list
+    class BusinessLogicLayer {
+        <<Package>>
+        +User
+        +Place
+        +Review
+        +Amenity
+        +HBnBFacade
+    }
 
-    %% POST /places {name, city_id, ...}
-    User->>API: POST /places {name, city_id, ...}
-    API->>PlaceModel: create_place(data)
-    PlaceModel->>Database: INSERT INTO places
-    Database-->>PlaceModel: return confirmation
-    PlaceModel-->>API: return new place object
-    API-->>User: 201 Created
+    class PersistenceLayer {
+        <<Package>>
+        +DBStorage
+        +FileStorage
+        +StorageManager
+    }
 
-    %% POST /places/:id/reviews {text, user_id}
-    User->>API: POST /places/:id/reviews {text, user_id}
-    API->>ReviewModel: create_review(data)
-    ReviewModel->>Database: INSERT INTO reviews
-    Database-->>ReviewModel: return confirmation
-    ReviewModel-->>API: return new review object
-    API-->>User: 201 Created
-
-    %% POST /users {email, password}
-    User->>API: POST /users {email, password}
-    API->>UserModel: create_user(data)
-    UserModel->>Database: INSERT INTO users
-    Database-->>UserModel: return confirmation
-    UserModel-->>API: return new user object
-    API-->>User: 201 Created
+    %% Relations
+    PresentationLayer --> BusinessLogicLayer : via HBnBFacade
+    BusinessLogicLayer --> PersistenceLayer : storage access
