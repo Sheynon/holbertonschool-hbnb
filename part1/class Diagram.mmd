@@ -1,0 +1,41 @@
+classDiagram
+class User {
+    +String first_name
+    +String last_name
+    +String mail_name
+    +String password
+    +String profile_picture
+    +String city
+    +String countries
+    +String language
+    +String description
+    +string first_opinion
+    +String last_opinion
+    +Integer phone_number
+}
+class Place {
+    +String name
+    +String description
+    +String number_of_people
+    +String number_of_bedrooms
+    +String price_per_night
+    +String address
+    +String city
+    +String address_postal_code
+
+    +calculate_price(night)
+}
+class Review {
+    +String cleanliness
+    +String communication
+    +String check_in
+}
+class Amenity {
+    +attribute1: Type
+    +method1(): ReturnType
+}
+User --|> Place 
+User --> Review  
+Place o--Amenity
+Place --> Review 
+Review --> Amenity 
