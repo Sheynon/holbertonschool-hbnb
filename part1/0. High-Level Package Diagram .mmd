@@ -1,0 +1,26 @@
+classDiagram
+%% --- Presentation Layer ---
+class PresentationLayer {
+    <<Interface>>
+    + APIService
+    + CLIService
+}
+
+%% --- Business Logic Layer ---
+class BusinessLogicLayer {
+    + User
+    + Place
+    + Review
+    + Amenity
+    + HBNBFacade
+}
+
+%% --- Persistence Layer ---
+class PersistenceLayer {
+    + FileStorage
+    + DBStorage
+}
+
+%% --- Communication ---
+PresentationLayer --> BusinessLogicLayer : via HBNBFacade
+BusinessLogicLayer --> PersistenceLayer : CRUD operations
