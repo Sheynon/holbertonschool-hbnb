@@ -1,0 +1,27 @@
+classDiagram
+    %% Packages
+    class PresentationLayer {
+        <<Package>>
+        +API
+        +Services
+    }
+
+    class BusinessLogicLayer {
+        <<Package>>
+        +User
+        +Place
+        +Review
+        +Amenity
+        +HBnBFacade
+    }
+
+    class PersistenceLayer {
+        <<Package>>
+        +DBStorage
+        +FileStorage
+        +StorageManager
+    }
+
+    %% Relations
+    PresentationLayer --> BusinessLogicLayer : via HBnBFacade
+    BusinessLogicLayer --> PersistenceLayer : storage access
