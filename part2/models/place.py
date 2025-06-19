@@ -15,6 +15,7 @@ class Place(BaseModel):
         self.amanities = []
     
     @property
+    # verifie que le nom est une chaine de caractere non vide
     def name(self):
         return self.__name
     @name.setter
@@ -24,6 +25,7 @@ class Place(BaseModel):
         self.__name = value
 
     @property
+    # verifie que la description est une chaine de caractere non vide
     def description(self):
         return self.__description
     @description.setter
@@ -31,7 +33,10 @@ class Place(BaseModel):
         if not isinstance(value, str) or not value:
             raise ValueError("Description must be a non-empty string.")
         self.__description = value
+
     @property
+    # verifie que la longitude est un nombre entre -180 et 180
+    # verifie que la longitude à bien été initialisée
     def longitude(self):
         return self.__longitude
     @longitude.setter
@@ -42,6 +47,8 @@ class Place(BaseModel):
             raise ValueError("il manque la valeur de longitude")
     
     @property
+    # verifie que la latitude est un nombre entre -90 et 90
+    # verifie que la latitude à bien été initialisée
     def latitude(self):
         return self.__latitude
     @latitude.setter
@@ -51,3 +58,25 @@ class Place(BaseModel):
         if not (-90 <= value <= 90):
             raise ValueError("il manque la valeur de latitude")
         self.__latitude = value
+
+    @property
+    # verifie que le prix est un nombre positif
+    # verifie que le prix à bien été initialisé
+    def price(self):
+        return self.__price
+    @price.setter
+    def price(self, value):
+        if not isinstance(value, (self, float)):
+            raise TypeError("il manque le prix")
+        if value < 1:
+            raise ValueError("le prix doit être positif")
+        self.__price = value
+    @property
+    # verifie que le owner est une chaine de caractere non vide
+    def owner(self):
+        return self.__owner
+    @owner.setter
+    def owner(self, value):
+        if not isinstance(value, str) or not value:
+            raise ValueError("")
+        self.__owner = value
