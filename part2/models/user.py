@@ -1,5 +1,5 @@
 import re
-from basse_model import BaseModel
+from models.base_model import BaseModel
 
 class User(BaseModel):
     _emails = set()
@@ -13,16 +13,16 @@ class User(BaseModel):
         self.is_admin = is_admin
         self.places = []
         self.reviews = []
-    
+
     @property
     def first_name(self):
         return self.__first_name
-    
+
     @first_name.setter
     def first_name(self, value):
         if not isinstance(value, str):
             raise TypeError("First name must be a string")
-        super().is_max_length('First name', value, 50)
+        self.is_max_length('First name', value, 50)
         self.__first_name = value
 
     @property
@@ -33,16 +33,18 @@ class User(BaseModel):
     def last_name(self, value):
         if not isinstance(value, str):
             raise TypeError("Last name must be a string")
-        super().is_max_length('Last name', value, 50)
+        self.is_max_length('Last name', value, 50)
         self.__last_name = value
 
     @property
     def password(self):
         return self.__password
+
     @password.setter
     def password(self, value):
         if not isinstance(value, str):
             raise TypeError("Password must be a string")
+        self.__password = value
 
     @property
     def email(self):
@@ -52,20 +54,22 @@ class User(BaseModel):
     def email(self, value):
         if not isinstance(value, str):
             raise TypeError("Email must be a string")
-        if not re.match(r"[^@]+@[^@]+\.[^@]+", value):
-            raise ValueError("Invalid email format")
+        self.is_valid_email('Email', value)
         if value in User._emails:
             raise ValueError("Email already exists")
+
+        # Supprimer l'ancien email si on en change
         if hasattr(self, "_User__email"):
             User._emails.discard(self.__email)
+
         self.__email = value
         User._emails.add(value)
-    
+
     @property
     def is_admin(self):
         return self.__is_admin
+
     @is_admin.setter
     def is_admin(self, value):
-        if not isinstance(value, bool):
-            raise TypeError("is_admin must be a boolean")
+        self.is_boolean('is_admin', value)
         self.__is_admin = value
