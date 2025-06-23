@@ -16,13 +16,16 @@ class AmenityList(Resource):
     def post(self):
         """Register a new amenity"""
         # Placeholder for the logic to register a new amenity
-        pass
+        data = api.payload
+        new_amenity = facade.create_amenity(data)
+        return new_amenity.to_dict(), 201
 
     @api.response(200, 'List of amenities retrieved successfully')
     def get(self):
         """Retrieve a list of all amenities"""
         # Placeholder for logic to return a list of all amenities
-        pass
+        amenities = facade.get_all_amenities()
+        return [amenity.to_dict() for amenity in amenities], 200
 
 @api.route('/<amenity_id>')
 class AmenityResource(Resource):
@@ -31,7 +34,10 @@ class AmenityResource(Resource):
     def get(self, amenity_id):
         """Get amenity details by ID"""
         # Placeholder for the logic to retrieve an amenity by ID
-        pass
+        amenity = facade.get_amenity(amenity_id)
+        if amenity:
+            return amenity.to_dict(), 200
+        return {"error": "Amenity not found"}, 404
 
     @api.expect(amenity_model)
     @api.response(200, 'Amenity updated successfully')
@@ -40,4 +46,8 @@ class AmenityResource(Resource):
     def put(self, amenity_id):
         """Update an amenity's information"""
         # Placeholder for the logic to update an amenity by ID
-        pass
+        data = api.payload
+        updated = facade.update_amenity(amenity_id, data)
+        if updated:
+            return updated, 200
+        return {"error": "Amenity not found"}, 404
