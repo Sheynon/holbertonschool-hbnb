@@ -1,32 +1,22 @@
-from models.base_model import BaseModel
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
+from sqlalchemy.orm import relationship
+from models.base_model import BaseModel, Base
 
-class Place(BaseModel):
-    def __init__(self, title, description, price, latitude, longitude, owner):
-        super().__init__()
+place_amenity = Table('place_amenity', Base.metadata,
+    Column('place_id', String(60), ForeignKey('places.id'), primary_key=True),
+    Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True)
+)
 
-        if not title or len(title) > 100:
-            raise ValueError("title requis et ≤ 100 caractères")
-        if price <= 0:
-            raise ValueError("Le prix doit être > 0")
-        if latitude < -90 or latitude > 90:
-            raise ValueError("Latitude invalide")
-        if longitude < -180 or longitude > 180:
-            raise ValueError("Longitude invalide")
-        if not isinstance(owner, BaseModel):
-            raise ValueError("owner doit être un utilisateur valide")
+class Place(BaseModel, Base):
+    __tablename__ = 'places'
+    id = Column(String(60), primary_key=True, nullable=False)
+    name = Column(String(128), nullable=False)
+    description = Column(String(1024))
+    number_rooms = Column(Integer, default=0)
+    price_by_night = Column(Integer, default=0)
+    latitude = Column(Float)
+    longitude = Column(Float)
+    owner_id = Column(String(60), ForeignKey('users.id'), nullable=False)
 
-        self.title = title
-        self.description = description
-        self.price = price
-        self.latitude = latitude
-        self.longitude = longitude
-        self.owner = owner
-
-        self.reviews = []
-        self.amenities = []
-
-    def add_review(self, review):
-        self.reviews.append(review)
-
-    def add_amenity(self, amenity):
-        self.amenities.append(amenity)
+    owner = relationship("User")
+    amenities = relationship("Amenity", secondary=place_amenity, viewonly=False)
