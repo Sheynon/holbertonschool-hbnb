@@ -1,6 +1,5 @@
 import re
-from basse_model import BaseMode, BaseModel
-from user import reviews
+from .basse_model import BaseModel
 
 class Place(BaseModel):
     def __init__(self, name, description, longitude, latitude, price, owner):
@@ -18,6 +17,7 @@ class Place(BaseModel):
     # verifie que le nom est une chaine de caractere non vide
     def name(self):
         return self.__name
+    
     @name.setter
     def name(self, value):
         if not isinstance(value, str) or not value:
@@ -28,6 +28,7 @@ class Place(BaseModel):
     # verifie que la description est une chaine de caractere non vide
     def description(self):
         return self.__description
+    
     @description.setter
     def description(self, value):
         if not isinstance(value, str) or not value:
@@ -39,6 +40,7 @@ class Place(BaseModel):
     # verifie que la longitude à bien été initialisée
     def longitude(self):
         return self.__longitude
+    
     @longitude.setter
     def longitude(self, value):
         if not isinstance(value, (int, float)):
@@ -51,6 +53,7 @@ class Place(BaseModel):
     # verifie que la latitude à bien été initialisée
     def latitude(self):
         return self.__latitude
+    
     @latitude.setter
     def latitude(self, value):
         if not isinstance(value, (int, float)):
@@ -64,6 +67,7 @@ class Place(BaseModel):
     # verifie que le prix à bien été initialisé
     def price(self):
         return self.__price
+    
     @price.setter
     def price(self, value):
         if not isinstance(value, (self, float)):
@@ -71,12 +75,18 @@ class Place(BaseModel):
         if value < 1:
             raise ValueError("le prix doit être positif")
         self.__price = value
+    
     @property
     # verifie que le owner est une chaine de caractere non vide
     def owner(self):
         return self.__owner
+
     @owner.setter
     def owner(self, value):
         if not isinstance(value, str) or not value:
             raise ValueError("")
         self.__owner = value
+
+    def ad_review(self, review):
+        from .user import reviews
+        review.append(review)

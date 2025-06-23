@@ -1,6 +1,6 @@
 # models/amenity.py
-from basse_model import BaseModel
-from place import amenity
+from .basse_model import BaseModel
+from .place import amenity
 
 class Amenity(BaseModel):
     def __init__(self, wifi, parking, garage, picine, climatisation):
