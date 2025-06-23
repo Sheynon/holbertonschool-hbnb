@@ -1,81 +1,22 @@
-import re
-from .base_model import BaseModel
-from .user import User
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
+from sqlalchemy.orm import relationship
+from app.models.base import BaseModel, Base
 
-class Place(BaseModel):
-    def __init__(self, name, description, longitude, latitude, price, owner):
-        super().__init__()
-        self.name = name
-        self.description = description
-        self.longitude = longitude
-        self.latitude = latitude
-        self.price = price
-        self.owner = owner
-        self.reviews = []
-        self.amenities = []  # corrigé 'amanities' en 'amenities'
-    
-    @property
-    def name(self):
-        return self.__name
+place_amenity = Table('place_amenity', Base.metadata,
+    Column('place_id', String(60), ForeignKey('places.id'), primary_key=True),
+    Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True)
+)
 
-    @name.setter
-    def name(self, value):
-        if not isinstance(value, str) or not value:
-            raise ValueError("Name must be a non-empty string.")
-        self.__name = value
+class Place(BaseModel, Base):
+    __tablename__ = 'places'
 
-    @property
-    def description(self):
-        return self.__description
+    name = Column(String(128), nullable=False)
+    description = Column(String(1024))
+    number_rooms = Column(Integer, default=0)
+    price_by_night = Column(Integer, default=0)
+    latitude = Column(Float)
+    longitude = Column(Float)
+    owner_id = Column(String(60), ForeignKey('users.id'), nullable=False)
 
-    @description.setter
-    def description(self, value):
-        if not isinstance(value, str) or not value:
-            raise ValueError("Description must be a non-empty string.")
-        self.__description = value
-
-    @property
-    def longitude(self):
-        return self.__longitude
-
-    @longitude.setter
-    def longitude(self, value):
-        if not isinstance(value, (int, float)):
-            raise TypeError("Longitude must be a number.")
-        if not (-180 <= value <= 180):
-            raise ValueError("Longitude must be between -180 and 180.")
-        self.__longitude = value
-
-    @property
-    def latitude(self):
-        return self.__latitude
-
-    @latitude.setter
-    def latitude(self, value):
-        if not isinstance(value, (int, float)):
-            raise TypeError("Latitude must be a number.")
-        if not (-90 <= value <= 90):
-            raise ValueError("Latitude must be between -90 and 90.")
-        self.__latitude = value
-
-    @property
-    def price(self):
-        return self.__price
-
-    @price.setter
-    def price(self, value):
-        if not isinstance(value, (int, float)):
-            raise TypeError("Price must be a number.")
-        if value < 1:
-            raise ValueError("Price must be positive.")
-        self.__price = value
-
-    @property
-    def owner(self):
-        return self.__owner
-
-    @owner.setter
-    def owner(self, value):
-        if not isinstance(value, str) or not value:
-            raise ValueError("Owner must be a non-empty string.")
-        self.__owner = value
+    owner = relationship("User")
+    amenities = relationship("Amenity", secondary=place_amenity, viewonly=False)

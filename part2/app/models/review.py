@@ -1,53 +1,13 @@
-from models.base_model import BaseModel
-from .place import Place
-from .user import User
+from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy.orm import relationship
+from models.base_model import BaseModel, Base
 
-class Review(BaseModel):
-    def __init__(self, text, rating, place, user):
-        super().__init__()
-        self.text = text
-        self.rating = rating
-        self.place = place
-        self.user = user
+class Review(BaseModel, Base):
+    __tablename__ = 'reviews'
 
-    @property
-    # verifie qui à bein le texte
-    def text(self):
-        return self.__text
-    @text.setter
-    def text(self, value):
-        if not isinstance(value, str) or not value:
-            raise ValueError("manque le texte")
-        self.__text = value
+    text = Column(String(1024), nullable=False)
+    user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
+    place_id = Column(String(60), ForeignKey('places.id'), nullable=False)
 
-    @property
-    # verifie que la note est un nombre entre 1 et 5
-    def rating(self):
-        return self.__rating
-    @rating.setter
-    def rating(self, value):
-        if not isinstance(value, (int, self)):
-            raise TypeError("la note doit être un nombre")
-        if not (1 <= value <= 5):
-            raise ValueError("la note doit être entre 1 et 5")
-        self.__rating = value
-
-    @property
-    # verifie que leix lieu exeiste pour la revue
-    def place(self):
-        return self.__place
-    @place.setter
-    def place(self, value):
-        if not value:
-            raise ValueError("manque le lieu")
-        self.__place = value
-
-    @property
-    # verifie que l'utilisateur existe pour la revue
-    def user(self):
-        return self.__user
-    @user.setter
-    def user(self, value):
-        if not value:
-            raise ValueError("manque l'utilisateur")
-        self.__user = value
+    user = relationship("User")
+    place = relationship("Place", back_populates="reviews")
