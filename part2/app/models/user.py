@@ -1,5 +1,5 @@
 import re
-from models.base_model import BaseModel
+from app.models.base_model import BaseModel
 
 class User(BaseModel):
     _emails = set()
@@ -73,3 +73,11 @@ class User(BaseModel):
     def is_admin(self, value):
         self.is_boolean('is_admin', value)
         self.__is_admin = value
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email
+        }

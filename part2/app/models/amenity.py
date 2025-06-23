@@ -1,4 +1,4 @@
-from .base_model import BaseModel
+from app.models.base_model import BaseModel
 
 class Amenity(BaseModel):
     def __init__(self, name):
@@ -21,3 +21,9 @@ class Amenity(BaseModel):
         if len(value) > 50:
             raise ValueError("name must be 50 characters or less")
         self.__name = value
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
