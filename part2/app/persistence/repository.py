@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 from abc import ABC, abstractmethod
 
 class Repository(ABC):
@@ -46,4 +44,3 @@ class InMemoryRepository(Repository):
 
     def get_by_attribute(self, attr_name, attr_value):
         return next((obj for obj in self._storage.values() if getattr(obj, attr_name) == attr_value), None)
->>>>>>> fa189ec019f9b9bd4f20ef9f6563e6c6812318e5
