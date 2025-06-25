@@ -1,37 +1,30 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
-
-from models.place import Place
-from models.user import User
-from models.amenity import Amenity
-from models.review import Review
-from storage import Storage
+from app.models.place import Place
+from app.models.user import User
+from app.models.amenity import Amenity
+from app.models.review import Review
+from app.persistence.repository import Storage
 
 class HBnBFacade:
     def __init__(self):
         self.storage = Storage()
 
     def create_place(self, place_data):
-        try:
-            owner = self.storage.get(User, place_data['owner_id'])
-            if not owner:
-                raise ValueError("Owner not found")
+        owner = self.storage.get(User, place_data['owner_id'])
+        if not owner:
+            raise ValueError("Owner not found")
 
-            amenities = [
-                self.storage.get(Amenity, a_id)
-                for a_id in place_data.get('amenities', [])
-            ]
-            if None in amenities:
-                raise ValueError("One or more amenities not found")
+        amenities = [
+            self.storage.get(Amenity, a_id)
+            for a_id in place_data.get('amenities', [])
+        ]
+        if None in amenities:
+            raise ValueError("One or more amenities not found")
 
-            place = Place(**place_data)
-            place.amenities = amenities
-            self.storage.new(place)
-            self.storage.save()
-            return place
-        except Exception as e:
-            raise e
+        place = Place(**place_data)
+        place.amenities = amenities
+        self.storage.new(place)
+        self.storage.save()
+        return place
 
     def get_place(self, place_id):
         place = self.storage.get(Place, place_id)
@@ -97,4 +90,5 @@ class HBnBFacade:
         self.storage.delete(review)
         self.storage.save()
 
+# Instance globale
 facade = HBnBFacade()
